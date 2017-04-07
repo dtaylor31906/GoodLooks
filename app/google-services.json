@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "815462334458",
+    "firebase_url": "https://good-looks.firebaseio.com",
+    "project_id": "good-looks",
+    "storage_bucket": "good-looks.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815462334458:android:e9cbc07a6dc87404",
+        "android_client_info": {
+          "package_name": "novapplications.goodlooks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "815462334458-gjuca4cutpo80jon0vr75hg5e12d69bd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "novapplications.goodlooks",
+            "certificate_hash": "02208d44205a3817cf8ee453de53093c64d7d98c"
+          }
+        },
+        {
+          "client_id": "815462334458-v3f8etm59atr89395vtair2oi6tch7r9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvSJahiSf7zTh7QXkMDfS4PZGHawMYwag"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "815462334458-v3f8etm59atr89395vtair2oi6tch7r9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
