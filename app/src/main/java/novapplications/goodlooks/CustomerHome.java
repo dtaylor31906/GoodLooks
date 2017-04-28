@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -26,6 +27,7 @@ public class CustomerHome extends AppCompatActivity
     public static final int REQUEST_CODE_LOGIN = 1;
     protected FirebaseAuth login;
     protected FirebaseAuth.AuthStateListener loginListner;
+    private ListView appointments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +35,14 @@ public class CustomerHome extends AppCompatActivity
         setContentView(R.layout.activity_customer_home);
         customizeActionBar();
         handleLogin();
+        bindListView();
 
     }
+
+    private void bindListView() {
+        appointments = (ListView)findViewById(R.id.appointmentListView );
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
