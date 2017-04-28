@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
-
+import novapplications.goodlooks.models.User;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,11 +28,13 @@ public class CustomerHome extends AppCompatActivity
     protected FirebaseAuth login;
     protected FirebaseAuth.AuthStateListener loginListner;
     private ListView appointments;
+    private String[] roles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
+        roles = getIntent().getExtras().getStringArray("roles");
         customizeActionBar();
         handleLogin();
         bindListView();
@@ -49,6 +51,18 @@ public class CustomerHome extends AppCompatActivity
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.custommer_action_bar, menu);
+        //check what roles to add to menu
+
+        if(roles.length == 1)
+        {
+            //display no role change options.
+        }
+        else
+        {
+            //display stylist role
+            MenuItem stylistItem = (MenuItem) findViewById(R.id.changeRoleStylist);
+            stylistItem.setVisible(true);
+        }
         return true;
     }
 

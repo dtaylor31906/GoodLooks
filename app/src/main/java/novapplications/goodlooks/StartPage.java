@@ -149,13 +149,14 @@ public class StartPage extends AppCompatActivity
     {
         final String uid = user.getUid();
         //database read
-        users.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        users.child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 if(dataSnapshot.exists())//if user in the database
                 {
                     Intent customerActivity = new Intent(getApplicationContext(),CustomerHome.class);
+                    //TODO: get customer object from database, then put in in intent
                     startActivity(customerActivity);
                 }
                 else//if user not in database add user and get information
@@ -241,6 +242,16 @@ public class StartPage extends AppCompatActivity
         {
             //launch customer home
             Intent customerActivity = new Intent(getApplicationContext(),CustomerHome.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("firstName",newUser.getFirstName());
+            bundle.putString("lastName",newUser.getLastName());
+            bundle.putString("uid",newUser.getUid());
+            bundle.putStringArray("roles",rolesList);
+            customerActivity.putExtras(bundle);
+            /*customerActivity.putExtra("firstName",newUser.getFirstName());
+            customerActivity.putExtra("lastName",newUser.getLastName());
+            customerActivity.putExtra("uid",newUser.getUid());
+            customerActivity.putExtra("roles",rolesList);*/
             startActivity(customerActivity);
         }
         else //if other roles exist
@@ -259,12 +270,23 @@ public class StartPage extends AppCompatActivity
         {
             //go to owner home
             Intent ownerActivity = new Intent(getApplicationContext(),OwnerHome.class);
+            ownerActivity.putExtra("user",newUser);
             startActivity(ownerActivity);
         }
         else
         {
             //open stylist home
             Intent stylistActivity = new Intent(getApplicationContext(),StylistHome.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("firstName",newUser.getFirstName());
+            bundle.putString("lastName",newUser.getLastName());
+            bundle.putString("uid",newUser.getUid());
+            bundle.putStringArray("roles",rolesList);
+           /* stylistActivity.putExtra("firstName",newUser.getFirstName());
+            stylistActivity.putExtra("lastName",newUser.getLastName());
+            stylistActivity.putExtra("uid",newUser.getUid());
+            stylistActivity.putExtra("roles",rolesList);*/
+           stylistActivity.putExtras(bundle);
             startActivity(stylistActivity);
         }
     }
