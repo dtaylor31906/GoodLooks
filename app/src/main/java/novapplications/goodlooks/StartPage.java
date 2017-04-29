@@ -1,6 +1,7 @@
 package novapplications.goodlooks;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /*This class is the controller for the very first activity of the App.
 * It will basically be a logo or image to the user.
@@ -140,8 +143,6 @@ public class StartPage extends AppCompatActivity
         final String uid = user.getUid();
         checkUserRole();
 
-        //to start there will only be a place for customers.
-        //start activity for customer
 
     }
 
@@ -149,7 +150,7 @@ public class StartPage extends AppCompatActivity
     {
         final String uid = user.getUid();
         //database read
-        users.child(uid).addValueEventListener(new ValueEventListener() {
+        users.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
@@ -241,7 +242,7 @@ public class StartPage extends AppCompatActivity
         if(rolesList.length == 1)
         {
             //launch customer home
-            Intent customerActivity = new Intent(getApplicationContext(),CustomerHome.class);
+            Intent customerActivity = new Intent(this,CustomerHome.class);
             Bundle bundle = new Bundle();
             bundle.putString("firstName",newUser.getFirstName());
             bundle.putString("lastName",newUser.getLastName());
@@ -276,7 +277,7 @@ public class StartPage extends AppCompatActivity
         else
         {
             //open stylist home
-            Intent stylistActivity = new Intent(getApplicationContext(),StylistHome.class);
+            Intent stylistActivity = new Intent(this,StylistHome.class);
             Bundle bundle = new Bundle();
             bundle.putString("firstName",newUser.getFirstName());
             bundle.putString("lastName",newUser.getLastName());
@@ -287,8 +288,19 @@ public class StartPage extends AppCompatActivity
             stylistActivity.putExtra("uid",newUser.getUid());
             stylistActivity.putExtra("roles",rolesList);*/
            stylistActivity.putExtras(bundle);
+            /*SharedPreferences pref = getApplicationContext().getSharedPreferences("user_info", MODE_PRIVATE);*/
+            /*SharedPreferences.Editor editor = pref.edit();*/
+            /*editor.putStringSet("roles",makeSet(rolesList));*/
             startActivity(stylistActivity);
         }
+    }
+
+    private Set<String> makeSet(String[] rolesList) {
+        Set<String> result = new HashSet<String>();
+        for (int i = 0; i <rolesList.length ; i++) {
+            result.add(rolesList[i]);
+        }
+        return result;
     }
 
 

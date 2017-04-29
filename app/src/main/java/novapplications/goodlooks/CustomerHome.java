@@ -2,12 +2,14 @@ package novapplications.goodlooks;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,13 +20,20 @@ import novapplications.goodlooks.models.User;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 
 public class CustomerHome extends AppCompatActivity
 {
     public static final int REQUEST_CODE_LOGIN = 1;
+    private static final String TAG = "CustomerHome";
     protected FirebaseAuth login;
     protected FirebaseAuth.AuthStateListener loginListner;
     private ListView appointments;
@@ -34,11 +43,45 @@ public class CustomerHome extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
-        roles = getIntent().getExtras().getStringArray("roles");
+        Bundle extras = getIntent().getExtras();
+        if (extras == null)
+        {
+            getRolesFromDataBase();
+        }
+        else
+        {
+            roles = extras.getStringArray("roles");
+        }
         customizeActionBar();
         handleLogin();
         bindListView();
+    }
 
+    private void getRolesFromDataBase() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference currentUserRoles = ref.child("users/" + uid+"/roles");
+        currentUserRoles.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                Log.d(TAG,"DATAcHANGED");
+                Iterable<DataSnapshot> data = dataSnapshot.getChildren();
+                Iterator<DataSnapshot> itterator = data.iterator();
+                roles = new String[(int) dataSnapshot.getChildrenCount()];
+                int i = 0;
+                while (itterator.hasNext())
+                {
+                    roles[i++] = itterator.next().getKey();
+                }
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG,databaseError.getMessage());
+            }
+        });
     }
 
     private void bindListView() {
@@ -47,23 +90,68 @@ public class CustomerHome extends AppCompatActivity
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.custommer_action_bar, menu);
-        //check what roles to add to menu
+        return true;
+    }
 
-        if(roles.length == 1)
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        //check what roles to add to menu
+/*
+        boolean check = true;
+        int totalTime = 0;
+        int maxTime = 1500000;
+        int delay = 2000;
+        while (check)
         {
-            //display no role change options.
+            if(roles == null)
+            {
+                Log.d(TAG,"waiting on getrolesfromdatabase call(1)");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG,"waiting on getrolesfromdatabase call");
+                    }
+                }, delay);
+
+                totalTime += delay;
+                Log.d(TAG,"elapsed: "+totalTime);
+            }
+            else
+            {
+                check = false;
+            }
+
+
+            if(totalTime > maxTime)
+            {
+                check= false;
+                Log.d(TAG,"exceddd max time");
+            }
+        }*/
+        if(roles == null)
+        {
+            return true;
         }
         else
         {
-            //display stylist role
-            MenuItem stylistItem = (MenuItem) findViewById(R.id.changeRoleStylist);
-            stylistItem.setVisible(true);
+            if(roles.length == 1)
+            {
+                //display no role change options.
+            }
+            else
+            {
+                //display stylist role
+                MenuItem stylistItem = menu.findItem(R.id.changeRoleStylist);
+                stylistItem.setVisible(true);
+            }
+            return true;
         }
-        return true;
+
+
     }
 
     @Override
@@ -73,7 +161,11 @@ public class CustomerHome extends AppCompatActivity
         {
             case R.id.signout:
                 AuthUI.getInstance().signOut(this);
-
+                return true;
+            case R.id.changeRoleStylist:
+                Intent stylistActivity = new Intent(this,StylistHome.class);
+                stylistActivity.putExtra("roles",roles);
+                startActivity(stylistActivity);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
