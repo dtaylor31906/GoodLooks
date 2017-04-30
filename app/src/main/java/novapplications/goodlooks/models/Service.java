@@ -6,7 +6,10 @@ package novapplications.goodlooks.models;
 //Class the describes a service that will be offered at an establishment
 public class Service
 {
-    private String name, price, description, category;
+    private String name //name of the serivce e.g temp fade
+            , price// price in USD  written as a string
+            , description// brief description of service (optional for user entry)
+            , category;// mandoroty field categorizes the service based on the chosen constants in this class
     public final String CATEGORY_MALE_HAIRCUT = "male haircut",CATEGORY_FEMALE_HAIRCUT = "female haircut",
     CATEGORY_OTHER = "other";
 

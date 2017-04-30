@@ -34,6 +34,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="novapplications.goodlooks.StylistHome" />
         </activity>
+        <activity android:name=".CustomerCategoryPicker" />
+        <activity android:name=".CustomerStylistPicker"></activity>
     </application>
 
 </manifest>
