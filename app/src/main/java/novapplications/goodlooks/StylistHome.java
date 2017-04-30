@@ -26,8 +26,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import static novapplications.goodlooks.R.attr.windowActionBar;
-
 public class StylistHome extends AppCompatActivity
 {
 
@@ -37,6 +35,8 @@ public class StylistHome extends AppCompatActivity
     protected FirebaseAuth.AuthStateListener loginListner;
     private Button customerButton;
     private String[] roles;
+    private ValueEventListener rolesListener;
+    private DatabaseReference currentUserRoles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,26 +59,25 @@ public class StylistHome extends AppCompatActivity
     private void getRolesFromDataBase() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference currentUserRoles = ref.child("users/" + uid+"/roles");
-        currentUserRoles.addListenerForSingleValueEvent(new ValueEventListener() {
+        currentUserRoles = ref.child("users/" + uid+"/roles");
+        rolesListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> data = dataSnapshot.getChildren();
                 Iterator<DataSnapshot> itterator = data.iterator();
                 roles = new String[(int) dataSnapshot.getChildrenCount()];
                 int i = 0;
-                while (itterator.hasNext())
-                {
+                while (itterator.hasNext()) {
                     roles[i++] = itterator.next().getKey();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG,databaseError.getMessage());
+                Log.d(TAG, databaseError.getMessage());
             }
-        });
+        };
+        currentUserRoles.addListenerForSingleValueEvent(rolesListener);
     }
 
     protected void customizeActionBar()
@@ -118,6 +117,7 @@ public class StylistHome extends AppCompatActivity
 
     private void onSignOut() {
         Toast.makeText(this, "signedout", Toast.LENGTH_SHORT).show();
+        removeListeners();
     }
 
     //set information needed after siging in
@@ -147,15 +147,26 @@ public class StylistHome extends AppCompatActivity
     protected void onPause()
     {
         super.onPause();
+         removeListeners();
+    }
+
+    private void removeListeners() {
+
         if(loginListner != null) {
             login.removeAuthStateListener(loginListner);
         }
+        if(rolesListener != null)
+        {
+            currentUserRoles.removeEventListener(rolesListener);
+        }
+
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.custommer_action_bar, menu);
+        inflater.inflate(R.menu.default_action_bar, menu);
         return true;
     }
     @Override
@@ -177,6 +188,10 @@ public class StylistHome extends AppCompatActivity
                 customerActivity.putExtra("roles",roles);
                 startActivity(customerActivity);
                 return true;
+            case R.id.settings:
+                Intent settingsActivity = new Intent(getApplicationContext(),SettingsStylist.class);
+                startActivity(settingsActivity);
+                return  true;
             default:
                 return super.onOptionsItemSelected(item);
         }

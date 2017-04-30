@@ -48,6 +48,8 @@ public class StartPage extends AppCompatActivity
     private EditText firstName, lastName;
     private CheckBox customerCB, ownerCB, stylistCB;
     private Button submitButton;
+    private ValueEventListener rolesListener;
+    private DatabaseReference currentUserRef;
 
 
     @Override
@@ -74,10 +76,21 @@ public class StartPage extends AppCompatActivity
     protected void onPause()
     {
         super.onPause();
-        if(loginListner != null) {
+        removeListeners();
+    }
+
+    private void removeListeners()
+    {
+        if(loginListner != null)
+        {
             login.removeAuthStateListener(loginListner);
         }
+        if(rolesListener != null)
+        {
+            currentUserRef.removeEventListener(rolesListener);
+        }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -131,8 +144,9 @@ public class StartPage extends AppCompatActivity
 
 
 
-    private void onSignOut() {
-
+    private void onSignOut()
+    {
+        removeListeners();
     }
 
     //set information needed after siging in
@@ -150,17 +164,19 @@ public class StartPage extends AppCompatActivity
     {
         final String uid = user.getUid();
         //database read
-        users.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        //if user in the database
+//TODO: get customer object from database, then put in in intent
+//if user not in database add user and get information
+//init view for collecting user data.
+        rolesListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if(dataSnapshot.exists())//if user in the database
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())//if user in the database
                 {
-                    Intent customerActivity = new Intent(getApplicationContext(),CustomerHome.class);
+                    Intent customerActivity = new Intent(getApplicationContext(), CustomerHome.class);
                     //TODO: get customer object from database, then put in in intent
                     startActivity(customerActivity);
-                }
-                else//if user not in database add user and get information
+                } else//if user not in database add user and get information
                 {
                     //init view for collecting user data.
                     initiateSignUp(uid);
@@ -169,11 +185,12 @@ public class StartPage extends AppCompatActivity
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
+            public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "checkRoles:onCancelled", databaseError.toException());
             }
-        });
+        };
+        currentUserRef = users.child(uid);
+        currentUserRef.addListenerForSingleValueEvent(rolesListener);
 
     }
 

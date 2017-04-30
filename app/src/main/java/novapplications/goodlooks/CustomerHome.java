@@ -2,10 +2,7 @@ package novapplications.goodlooks;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,9 +11,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-import novapplications.goodlooks.models.User;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,40 +36,55 @@ public class CustomerHome extends AppCompatActivity
     protected FirebaseAuth.AuthStateListener loginListner;
     private ListView appointments;
     private String[] roles;
+    private Button appointmentButton;
+    DatabaseReference currentUserRoles;
+    private ValueEventListener rolesListner;
+    private View.OnClickListener appointmentButtonListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
-        Bundle extras = getIntent().getExtras();
-        if (extras == null)
-        {
-            getRolesFromDataBase();
-        }
-        else
-        {
-            roles = extras.getStringArray("roles");
-        }
+        initListners();
         customizeActionBar();
         handleLogin();
+        initView();
+
+    }
+
+    private void initListners()
+    {
+        appointmentButtonListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //inquire about services
+                //then take customer to a page of stylist in there area that offer that service.
+            }
+        };
+    }
+
+    private void initView()
+    {
         bindListView();
+        appointmentButton = (Button) findViewById(R.id.appointmentButton);
+        appointmentButton.setOnClickListener(appointmentButtonListener);
     }
 
     private void getRolesFromDataBase() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference currentUserRoles = ref.child("users/" + uid+"/roles");
-        currentUserRoles.addListenerForSingleValueEvent(new ValueEventListener() {
+        currentUserRoles = ref.child("users/" + uid+"/roles");
+        rolesListner = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                Log.d(TAG,"DATAcHANGED");
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "DATAcHANGED");
                 Iterable<DataSnapshot> data = dataSnapshot.getChildren();
                 Iterator<DataSnapshot> itterator = data.iterator();
                 roles = new String[(int) dataSnapshot.getChildrenCount()];
                 int i = 0;
-                while (itterator.hasNext())
-                {
+                while (itterator.hasNext()) {
                     roles[i++] = itterator.next().getKey();
                 }
                 invalidateOptionsMenu();
@@ -79,9 +92,10 @@ public class CustomerHome extends AppCompatActivity
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG,databaseError.getMessage());
+                Log.d(TAG, databaseError.getMessage());
             }
-        });
+        };
+        currentUserRoles.addListenerForSingleValueEvent(rolesListner);
     }
 
     private void bindListView() {
@@ -92,7 +106,7 @@ public class CustomerHome extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.custommer_action_bar, menu);
+        inflater.inflate(R.menu.default_action_bar, menu);
         return true;
     }
 
@@ -192,8 +206,18 @@ public class CustomerHome extends AppCompatActivity
     protected void onPause()
     {
         super.onPause();
+
+        removeListners();
+    }
+
+    private void removeListners()
+    {
         if(loginListner != null) {
             login.removeAuthStateListener(loginListner);
+        }
+        if(rolesListner != null)
+        {
+            currentUserRoles.removeEventListener(rolesListner);
         }
     }
 
@@ -212,7 +236,7 @@ public class CustomerHome extends AppCompatActivity
                     //signed in
                     //figures out the role of the user, then displays the page accordingly.
                     //If users have multiple roles, an intermediate activity should be launched to make selection
-                    onSignIn();
+                    onSignIn(user);
                 }
                 else
                 {
@@ -241,8 +265,19 @@ public class CustomerHome extends AppCompatActivity
 
     //set information needed after siging in
     //figure out the right page to display based on the user's role
-    private void onSignIn() {
+    private void onSignIn(FirebaseUser user) {
+
+        Bundle extras = getIntent().getExtras();
+        if (extras == null)
+        {
+            getRolesFromDataBase();
+        }
+        else
+        {
+            roles = extras.getStringArray("roles");
+        }
         //populate listview anduser info
+
 
     }
 
