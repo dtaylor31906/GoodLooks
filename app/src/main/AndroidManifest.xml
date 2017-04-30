@@ -19,12 +19,23 @@
             android:name=".CustomerHome"
             android:label="@string/title_activity_customer_home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".StylistHome"
-            android:theme = "@style/AppTheme.NoActionBar" />
-        <activity android:name=".OwnerHome"
-            android:theme = "@style/AppTheme.NoActionBar" />
-
-
+        <activity
+            android:name=".StylistHome"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OwnerHome"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SettingsStylist"
+            android:label="@string/title_activity_settings_stylist"
+            android:parentActivityName=".StylistHome"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="novapplications.goodlooks.StylistHome" />
+        </activity>
+        <activity android:name=".CustomerCategoryPicker" />
+        <activity android:name=".CustomerStylistPicker"></activity>
     </application>
 
 </manifest>

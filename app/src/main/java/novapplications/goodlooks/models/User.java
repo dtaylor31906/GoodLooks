@@ -1,22 +1,15 @@
 package novapplications.goodlooks.models;
 
-/**
- * Created by Nova on 4/10/2017.
- */
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
-public class User {
+
+import java.io.Serializable;
+
+public class User implements Serializable{
     private String firstName, lastName, uid;
     private String[] roles;
-    @Exclude
     private int roleCount;
-    @Exclude
     public static final String ROLE_CUSTOMER = "customer";
-    @Exclude
     public static final String ROLE_STYLIST = "stylist";
-    @Exclude
     public static final String ROLE_OWNER = "owner";
-    @Exclude
     private final int MAX_NUMBER_OF_ROLES = 3;
 
 

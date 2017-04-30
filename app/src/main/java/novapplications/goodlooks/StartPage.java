@@ -1,6 +1,7 @@
 package novapplications.goodlooks;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /*This class is the controller for the very first activity of the App.
 * It will basically be a logo or image to the user.
@@ -45,6 +48,8 @@ public class StartPage extends AppCompatActivity
     private EditText firstName, lastName;
     private CheckBox customerCB, ownerCB, stylistCB;
     private Button submitButton;
+    private ValueEventListener rolesListener;
+    private DatabaseReference currentUserRef;
 
 
     @Override
@@ -71,10 +76,21 @@ public class StartPage extends AppCompatActivity
     protected void onPause()
     {
         super.onPause();
-        if(loginListner != null) {
+        removeListeners();
+    }
+
+    private void removeListeners()
+    {
+        if(loginListner != null)
+        {
             login.removeAuthStateListener(loginListner);
         }
+        if(rolesListener != null)
+        {
+            currentUserRef.removeEventListener(rolesListener);
+        }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -128,8 +144,9 @@ public class StartPage extends AppCompatActivity
 
 
 
-    private void onSignOut() {
-
+    private void onSignOut()
+    {
+        removeListeners();
     }
 
     //set information needed after siging in
@@ -140,8 +157,6 @@ public class StartPage extends AppCompatActivity
         final String uid = user.getUid();
         checkUserRole();
 
-        //to start there will only be a place for customers.
-        //start activity for customer
 
     }
 
@@ -149,16 +164,19 @@ public class StartPage extends AppCompatActivity
     {
         final String uid = user.getUid();
         //database read
-        users.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        //if user in the database
+//TODO: get customer object from database, then put in in intent
+//if user not in database add user and get information
+//init view for collecting user data.
+        rolesListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if(dataSnapshot.exists())//if user in the database
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())//if user in the database
                 {
-                    Intent customerActivity = new Intent(getApplicationContext(),CustomerHome.class);
+                    Intent customerActivity = new Intent(getApplicationContext(), CustomerHome.class);
+                    //TODO: get customer object from database, then put in in intent
                     startActivity(customerActivity);
-                }
-                else//if user not in database add user and get information
+                } else//if user not in database add user and get information
                 {
                     //init view for collecting user data.
                     initiateSignUp(uid);
@@ -167,11 +185,12 @@ public class StartPage extends AppCompatActivity
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
+            public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "checkRoles:onCancelled", databaseError.toException());
             }
-        });
+        };
+        currentUserRef = users.child(uid);
+        currentUserRef.addListenerForSingleValueEvent(rolesListener);
 
     }
 
@@ -240,7 +259,17 @@ public class StartPage extends AppCompatActivity
         if(rolesList.length == 1)
         {
             //launch customer home
-            Intent customerActivity = new Intent(getApplicationContext(),CustomerHome.class);
+            Intent customerActivity = new Intent(this,CustomerHome.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("firstName",newUser.getFirstName());
+            bundle.putString("lastName",newUser.getLastName());
+            bundle.putString("uid",newUser.getUid());
+            bundle.putStringArray("roles",rolesList);
+            customerActivity.putExtras(bundle);
+            /*customerActivity.putExtra("firstName",newUser.getFirstName());
+            customerActivity.putExtra("lastName",newUser.getLastName());
+            customerActivity.putExtra("uid",newUser.getUid());
+            customerActivity.putExtra("roles",rolesList);*/
             startActivity(customerActivity);
         }
         else //if other roles exist
@@ -259,14 +288,36 @@ public class StartPage extends AppCompatActivity
         {
             //go to owner home
             Intent ownerActivity = new Intent(getApplicationContext(),OwnerHome.class);
+            ownerActivity.putExtra("user",newUser);
             startActivity(ownerActivity);
         }
         else
         {
             //open stylist home
-            Intent stylistActivity = new Intent(getApplicationContext(),StylistHome.class);
+            Intent stylistActivity = new Intent(this,StylistHome.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("firstName",newUser.getFirstName());
+            bundle.putString("lastName",newUser.getLastName());
+            bundle.putString("uid",newUser.getUid());
+            bundle.putStringArray("roles",rolesList);
+           /* stylistActivity.putExtra("firstName",newUser.getFirstName());
+            stylistActivity.putExtra("lastName",newUser.getLastName());
+            stylistActivity.putExtra("uid",newUser.getUid());
+            stylistActivity.putExtra("roles",rolesList);*/
+           stylistActivity.putExtras(bundle);
+            /*SharedPreferences pref = getApplicationContext().getSharedPreferences("user_info", MODE_PRIVATE);*/
+            /*SharedPreferences.Editor editor = pref.edit();*/
+            /*editor.putStringSet("roles",makeSet(rolesList));*/
             startActivity(stylistActivity);
         }
+    }
+
+    private Set<String> makeSet(String[] rolesList) {
+        Set<String> result = new HashSet<String>();
+        for (int i = 0; i <rolesList.length ; i++) {
+            result.add(rolesList[i]);
+        }
+        return result;
     }
 
 

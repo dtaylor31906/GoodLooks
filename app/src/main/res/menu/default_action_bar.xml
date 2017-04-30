@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/signout"
+        android:enabled="true"
+        android:icon="@drawable/sign_out"
+        android:title="Signout"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/changeRoleStylist"
+        android:enabled="true"
+        android:icon="@drawable/sign_out"
+        android:title="@string/stylist"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/changeRoleCustomer"
+        android:enabled="true"
+        android:icon="@drawable/sign_out"
+        android:title="@string/customer"
+        android:visible="false"
+        app:showAsAction="never" />
+    <item
+        android:id ="@+id/settings"
+        android:enabled="true"
+        android:title="settings"
+        android:visible="true"
+        android:icon="@drawable/ic_action_settings"
+        app:showAsAction="ifRoom"/>
+</menu>
