@@ -75,7 +75,7 @@ public class CustomerHome extends AppCompatActivity
 
         // Create and populate a List of planet names.
         String[] planets = new String[] { "Mercury", "Venus", "Earth", "Mars",
-                "Jupiter", "Saturn", "Uranus", "Neptune"};
+                "Jupiter", "Saturn", "Uranus", "Neptune","moon1","moon2","moon3"};
         ArrayList<String> planetList = new ArrayList<String>();
         planetList.addAll( Arrays.asList(planets) );
 
