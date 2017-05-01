@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -55,6 +56,9 @@ public class CustomerHome extends AppCompatActivity
     public CustomerAppointment mCustomerAppointment;
     private ArrayAdapter<String> listAdapter ;
     private ChildEventListener childEventListener;
+public Button deleteBtn;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -63,19 +67,29 @@ public class CustomerHome extends AppCompatActivity
         setContentView(R.layout.activity_customer_home);
         userPref = getApplicationContext().getSharedPreferences("user",MODE_PRIVATE);
         appointments = new ArrayList<CustomerAppointment>();
+        deleteBtn = (Button)findViewById(R.id.deleteBtn);
         initListners();
         customizeActionBar();
         handleLogin();
         initView();
         getAppointments();
 
-
+deleteBtn.setOnClickListener(new View.OnClickListener()
+{
+    @Override
+    public void onClick(View v)
+    {
+      listAdapter.clear();
+    }
+});
 
         appointmentsListView = (ListView) findViewById( R.id.appointmentListView);
 
+
+
+
         // Create and populate a List of planet names.
-        String[] planets = new String[] { "Mercury", "Venus", "Earth", "Mars",
-                "Jupiter", "Saturn", "Uranus", "Neptune","moon1","moon2","moon3"};
+        String[] planets = new String[] { };
         ArrayList<String> planetList = new ArrayList<String>();
         planetList.addAll( Arrays.asList(planets) );
 
@@ -86,8 +100,22 @@ public class CustomerHome extends AppCompatActivity
         // into the ArrayAdapter constructor, you must not add more items.
         // Otherwise an exception will occur.
 
+        appointmentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+
+
+        });
+
 
     }
+
+
+
+
 
     private void getAppointments()
     {
@@ -146,6 +174,8 @@ public class CustomerHome extends AppCompatActivity
         };
         appointmentsRef.addChildEventListener(childEventListener);
     }
+
+
 
     private void initListView()
     {
