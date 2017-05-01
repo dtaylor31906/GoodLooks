@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +33,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 
-import novapplications.goodlooks.models.customerAppointment;
+import novapplications.goodlooks.datamodels.CustomerAppointment;
 
 
 public class CustomerHome extends AppCompatActivity
@@ -42,7 +43,7 @@ public class CustomerHome extends AppCompatActivity
     protected FirebaseAuth login;
     protected FirebaseAuth.AuthStateListener loginListner;
     private ListView appointmentsListView;
-    private ArrayList<customerAppointment> appointments;
+    private ArrayList<CustomerAppointment> appointments;
     private String[] roles;
     private Button appointmentButton;
     DatabaseReference currentUserRoles;
@@ -51,15 +52,17 @@ public class CustomerHome extends AppCompatActivity
     private SharedPreferences userPref;
     private ValueEventListener appointmentsListner;
     private DatabaseReference appointmentsRef;
-    public customerAppointment mCustomerAppointment;
+    public CustomerAppointment mCustomerAppointment;
     private ArrayAdapter<String> listAdapter ;
+    private ChildEventListener childEventListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
         userPref = getApplicationContext().getSharedPreferences("user",MODE_PRIVATE);
-        appointments = new ArrayList<customerAppointment>();
+        appointments = new ArrayList<CustomerAppointment>();
         initListners();
         customizeActionBar();
         handleLogin();
@@ -99,7 +102,7 @@ public class CustomerHome extends AppCompatActivity
                     Iterator<DataSnapshot> iterator = data.iterator();
                     while (iterator.hasNext())
                     {
-                        appointments.add(iterator.next().getValue(customerAppointment.class));
+                        appointments.add(iterator.next().getValue(CustomerAppointment.class));
                     }
                     initListView();
                 }
@@ -115,6 +118,33 @@ public class CustomerHome extends AppCompatActivity
         appointmentsRef = currentUserRef.child("appointments");
         //appointmentsRef.addValueEventListener(appointmentsListner);
         appointmentsRef.addListenerForSingleValueEvent(appointmentsListner);
+        childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                appointments.add(dataSnapshot.getValue(CustomerAppointment.class));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        appointmentsRef.addChildEventListener(childEventListener);
     }
 
     private void initListView()
@@ -301,6 +331,10 @@ public class CustomerHome extends AppCompatActivity
         if (appointmentsListner != null)
         {
             appointmentsRef.removeEventListener(appointmentsListner);
+        }
+        if(childEventListener != null)
+        {
+            appointmentsRef.removeEventListener(childEventListener);
         }
     }
 

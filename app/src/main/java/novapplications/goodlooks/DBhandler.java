@@ -8,12 +8,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import novapplications.goodlooks.models.Appointment;
-import novapplications.goodlooks.models.Service;
-import novapplications.goodlooks.models.Stylist;
+import novapplications.goodlooks.datamodels.Appointment;
+import novapplications.goodlooks.datamodels.CustomerAppointment;
+import novapplications.goodlooks.datamodels.Service;
+import novapplications.goodlooks.datamodels.Stylist;
+import novapplications.goodlooks.datamodels.StylistAppointment;
 
 public class DBhandler
 {
@@ -85,34 +84,20 @@ public class DBhandler
 
     }
 
-    public ValueEventListener stylistsGetAll(final ArrayList<Stylist> stylists)
+    public void stylistsAddNewCustomerRequest(Appointment appointment)
     {
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if(dataSnapshot.exists())
-                {
-                    stylists.clear();
-                    Iterable<DataSnapshot> data = dataSnapshot.getChildren();
-                    Iterator<DataSnapshot> iterator = data.iterator();
-                    while (iterator.hasNext())
-                    {
-                        stylists.add(iterator.next().getValue(Stylist.class));
-                    }
-                }
-            }
+        //add stylist appointment as request
+        String uid = appointment.getStlylistUid();
+        if(uid != null)
+        {
+            DatabaseReference appointments = stylists.child(uid).child("appointments");
+            String key = appointments.push().getKey();
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, databaseError.getMessage());
-                Log.d(TAG, databaseError.getDetails());
-            }
-        };
-    }
-    public void stylistsAddNewCustomerRequest()
-    {
-
+            appointments.child(key).setValue(new StylistAppointment(appointment));
+        }
+        //add customer appointment
+        DatabaseReference customerAppointments = users.child(appointment.getCustomerUid()).child("appointments");
+        customerAppointments.push().setValue(new CustomerAppointment(appointment));
     }
 
 

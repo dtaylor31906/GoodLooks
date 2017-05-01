@@ -1,4 +1,4 @@
-package novapplications.goodlooks.models;
+package novapplications.goodlooks.datamodels;
 
 /**
  * Created by Nova on 4/10/2017.

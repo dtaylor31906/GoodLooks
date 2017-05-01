@@ -10,4 +10,5 @@ public class CustomerStylistPicker2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_stylist_picker2);
     }
+
 }

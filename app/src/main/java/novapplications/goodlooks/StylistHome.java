@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import novapplications.goodlooks.models.Appointment;
+import novapplications.goodlooks.datamodels.Appointment;
 
 public class StylistHome extends AppCompatActivity
 {

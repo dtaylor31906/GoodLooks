@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import novapplications.goodlooks.models.Appointment;
+import novapplications.goodlooks.datamodels.Appointment;
 
 /**
  * Created by Nova on 4/10/2017.

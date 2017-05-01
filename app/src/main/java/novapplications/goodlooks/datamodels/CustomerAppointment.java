@@ -1,17 +1,26 @@
-package novapplications.goodlooks.models;
+package novapplications.goodlooks.datamodels;
 
 /**
  * Created by Nova on 5/1/2017.
  */
 
-public class customerAppointment
+public class CustomerAppointment
 {
-    private String stylistFirstName, stylistLastName, stlylistUid;
+    private String stylistFirstName, stylistLastName, stylistUid;
     private long startTime, endTime;
 
-    public customerAppointment()
+    public CustomerAppointment()
     {
 
+    }
+
+    public CustomerAppointment(Appointment appointment)
+    {
+        stylistFirstName = appointment.getStylistFirstName();
+        stylistLastName = appointment.getStylistLastName();
+        stylistUid = appointment.getStlylistUid();
+        startTime = appointment.getStartTime();
+        endTime = appointment.getEndTime();
     }
 
     public String getStylistFirstName() {
@@ -30,12 +39,12 @@ public class customerAppointment
         this.stylistLastName = stylistLastName;
     }
 
-    public String getStlylistUid() {
-        return stlylistUid;
+    public String getStylistUid() {
+        return stylistUid;
     }
 
-    public void setStlylistUid(String stlylistUid) {
-        this.stlylistUid = stlylistUid;
+    public void setStylistUid(String stylistUid) {
+        this.stylistUid = stylistUid;
     }
 
     public long getStartTime() {
