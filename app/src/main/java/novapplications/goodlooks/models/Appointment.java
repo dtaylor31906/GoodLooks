@@ -18,14 +18,6 @@ public class Appointment
     public Appointment() {
     }
 
-    public AbstractList<Service> getServicesToBePerformed() {
-        return servicesToBePerformed;
-    }
-
-    public void setServicesToBePerformed(AbstractList<Service> servicesToBePerformed) {
-        this.servicesToBePerformed = servicesToBePerformed;
-    }
-
     public User getProvider() {
         return provider;
     }
@@ -40,6 +32,10 @@ public class Appointment
 
     public void setCustomer(User customer) {
         this.customer = customer;
+    }
+
+    public Date getStartTime() {
+        return startTime;
     }
 
     public void setStartTime(Date startTime) {
@@ -62,12 +58,11 @@ public class Appointment
         this.actualEndTime = actualEndTime;
     }
 
-    public void getDescription() {
-
+    public AbstractList<Service> getServicesToBePerformed() {
+        return servicesToBePerformed;
     }
 
-    public void getStartTime() {
-
+    public void setServicesToBePerformed(AbstractList<Service> servicesToBePerformed) {
+        this.servicesToBePerformed = servicesToBePerformed;
     }
-
 }
