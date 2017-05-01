@@ -1,56 +1,20 @@
 package novapplications.goodlooks.models;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-
 
 /**
- * Created by Nova on 4/10/2017.
+ * Created by Nova on 5/1/2017.
  */
 
-public class Appointment
+public class customerAppointment
 {
-    private String customerFirstName,customerLastName, stylistFirstName, stylistLastName, customerUid, stlylistUid;
+    private String stylistFirstName, stylistLastName, stlylistUid;
     private long startTime, endTime;
     private ArrayList<Service> servicesToBePerformed;//services to be performed.
 
-
-    public Appointment()
+    public customerAppointment()
     {
 
-    }
-
-    public String getCustomerUid() {
-        return customerUid;
-    }
-
-    public void setCustomerUid(String customerUid) {
-        this.customerUid = customerUid;
-    }
-
-    public String getStlylistUid() {
-        return stlylistUid;
-    }
-
-    public void setStlylistUid(String stlylistUid) {
-        this.stlylistUid = stlylistUid;
-    }
-
-    public String getCustomerFirstName() {
-        return customerFirstName;
-    }
-
-    public void setCustomerFirstName(String customerFirstName) {
-        this.customerFirstName = customerFirstName;
-    }
-
-    public String getCustomerLastName() {
-        return customerLastName;
-    }
-
-    public void setCustomerLastName(String customerLastName) {
-        this.customerLastName = customerLastName;
     }
 
     public String getStylistFirstName() {
@@ -67,6 +31,14 @@ public class Appointment
 
     public void setStylistLastName(String stylistLastName) {
         this.stylistLastName = stylistLastName;
+    }
+
+    public String getStlylistUid() {
+        return stlylistUid;
+    }
+
+    public void setStlylistUid(String stlylistUid) {
+        this.stlylistUid = stlylistUid;
     }
 
     public long getStartTime() {
@@ -91,14 +63,5 @@ public class Appointment
 
     public void setServicesToBePerformed(ArrayList<Service> servicesToBePerformed) {
         this.servicesToBePerformed = servicesToBePerformed;
-    }
-
-    public Date getStartDateTime()
-    {
-        return new Date(startTime);
-    }
-    public Date getEndDateTime()
-    {
-        return new Date(endTime);
     }
 }

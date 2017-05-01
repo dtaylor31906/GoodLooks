@@ -19,6 +19,7 @@ public class DBhandler
     public static DatabaseReference owners;
     public static DatabaseReference stylists;
     public static  DatabaseReference serviceCategories;
+    public static DatabaseReference appointments;
     private final String TAG = "DBHandler";
 
     public DBhandler()
@@ -28,6 +29,7 @@ public class DBhandler
         owners = DB.child("owners");
         stylists = DB.child("stylists");
         serviceCategories = DB.child("serviceCategories");
+        appointments = DB.child("appointments");
     }
     //creates a path from data ref
     public String pathCreator(DatabaseReference s)
@@ -75,6 +77,8 @@ public class DBhandler
         appointmentsRef.child(key).setValue(appointment);
 
         //add Appointment to appointmentLog;
+        key = appointments.push().getKey();
+        appointments.child(key).setValue(appointment);
 
 
 
