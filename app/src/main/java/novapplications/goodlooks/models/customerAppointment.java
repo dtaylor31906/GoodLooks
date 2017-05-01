@@ -1,7 +1,5 @@
 package novapplications.goodlooks.models;
 
-import java.util.ArrayList;
-
 /**
  * Created by Nova on 5/1/2017.
  */

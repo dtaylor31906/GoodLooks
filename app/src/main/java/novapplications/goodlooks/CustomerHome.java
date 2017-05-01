@@ -12,14 +12,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-import novapplications.goodlooks.models.*;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import novapplications.goodlooks.models.Appointment;
+import novapplications.goodlooks.models.customerAppointment;
 
 
 public class CustomerHome extends AppCompatActivity
@@ -49,7 +49,8 @@ public class CustomerHome extends AppCompatActivity
     private SharedPreferences userPref;
     private ValueEventListener appointmentsListner;
     private DatabaseReference appointmentsRef;
-
+ public customerAppointment mCustomerAppointment;
+    private ArrayAdapter<String> listAdapter ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +63,27 @@ public class CustomerHome extends AppCompatActivity
         initView();
         getAppointments();
 
+
+
+        appointmentsListView = (ListView) findViewById( R.id.appointmentListView);
+
+        // Create and populate a List of planet names.
+        String[] planets = new String[] { "Mercury", "Venus", "Earth", "Mars",
+                "Jupiter", "Saturn", "Uranus", "Neptune"};
+        ArrayList<String> planetList = new ArrayList<String>();
+        planetList.addAll( Arrays.asList(planets) );
+
+        // Create ArrayAdapter using the planet list.
+        listAdapter = new ArrayAdapter<String>(this, R.layout.appointment, planetList);
+
+        // Add more planets. If you passed a String[] instead of a List<String>
+        // into the ArrayAdapter constructor, you must not add more items.
+        // Otherwise an exception will occur.
+
+
+        listAdapter.add( mCustomerAppointment.getStylistFirstName().toString() );
+        // Set the ArrayAdapter as the ListView's adapter.
+        appointmentsListView.setAdapter( listAdapter );
     }
 
     private void getAppointments()
