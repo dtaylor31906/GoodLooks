@@ -2,11 +2,7 @@ package novapplications.goodlooks;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,9 +12,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
-import novapplications.goodlooks.models.Address;
-import novapplications.goodlooks.models.Service;
-import novapplications.goodlooks.models.User;
+import novapplications.goodlooks.datamodels.Address;
+import novapplications.goodlooks.datamodels.Service;
+import novapplications.goodlooks.datamodels.User;
 
 //page for stylist to configure details such as hours to work and services they provide.
 public class SettingsStylist extends AppCompatActivity {

@@ -1,7 +1,5 @@
-package novapplications.goodlooks.models;
+package novapplications.goodlooks.datamodels;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 
@@ -10,8 +8,6 @@ public class Appointment
 {
     private String customerFirstName,customerLastName, stylistFirstName, stylistLastName, customerUid, stlylistUid;
     private long startTime, endTime;
-    private ArrayList<Service> servicesToBePerformed;//services to be performed.
-
 
     public Appointment()
     {
@@ -82,14 +78,6 @@ public class Appointment
         this.endTime = endTime;
     }
 
-    public ArrayList<Service> getServicesToBePerformed() {
-        return servicesToBePerformed;
-    }
-
-    public void setServicesToBePerformed(ArrayList<Service> servicesToBePerformed) {
-        this.servicesToBePerformed = servicesToBePerformed;
-    }
-
     public Date getStartDateTime()
     {
         return new Date(startTime);
@@ -98,4 +86,5 @@ public class Appointment
     {
         return new Date(endTime);
     }
+
 }

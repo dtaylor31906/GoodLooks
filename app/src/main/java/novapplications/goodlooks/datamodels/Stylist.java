@@ -1,4 +1,4 @@
-package novapplications.goodlooks.models;
+package novapplications.goodlooks.datamodels;
 
 import java.util.ArrayList;
 
@@ -11,9 +11,18 @@ public class Stylist
     private String firstName, lastName;
     private double longitude, latitude;
     private ArrayList<Service> servicesOffered;
+    private ArrayList<StylistAppointment> appointments;
     public Stylist()
     {
 
+    }
+
+    public ArrayList<StylistAppointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(ArrayList<StylistAppointment> appointments) {
+        this.appointments = appointments;
     }
 
     public ArrayList<Service> getServicesOffered() {

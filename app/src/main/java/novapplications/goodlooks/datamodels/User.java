@@ -1,17 +1,13 @@
-package novapplications.goodlooks.models;
+package novapplications.goodlooks.datamodels;
 
 
-import com.google.firebase.database.Exclude;
-
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class User {
     private String firstName;
     private String lastName;
     private ArrayList<String> roles;
-    private ArrayList<customerAppointment>appointments;
+    private ArrayList<CustomerAppointment>appointments;
     public static final String ROLE_CUSTOMER = "customer";
     public static final String ROLE_STYLIST = "stylist";
     public static final String ROLE_OWNER = "owner";
@@ -60,11 +56,11 @@ public class User {
         roles.add(role);
     }
 
-    public ArrayList<customerAppointment> getAppointments() {
+    public ArrayList<CustomerAppointment> getAppointments() {
         return appointments;
     }
 
-    public void setAppointments(ArrayList<customerAppointment> appointments) {
+    public void setAppointments(ArrayList<CustomerAppointment> appointments) {
         this.appointments = appointments;
     }
 
