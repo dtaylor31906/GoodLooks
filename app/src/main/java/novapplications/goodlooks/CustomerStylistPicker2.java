@@ -18,7 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import novapplications.goodlooks.datamodels.Stylist;
 
@@ -34,10 +36,10 @@ public class CustomerStylistPicker2 extends AppCompatActivity {
     protected FirebaseAuth.AuthStateListener loginListner;
 
     private ArrayList<Stylist> babyStylists = new ArrayList<>();
+    private HashMap<String,Stylist> stylistMap = new HashMap<>();
     private ArrayAdapter<String> babyStylistadapter;
     private ListView StylistListView;
     private SharedPreferences userPref;
-
 
 
 
@@ -53,10 +55,36 @@ public class CustomerStylistPicker2 extends AppCompatActivity {
         ArrayList<String> genitaliaList = new ArrayList<String>();
         genitaliaList.addAll(Arrays.asList(genitalia));
         babyStylistadapter = new ArrayAdapter<String>(this, R.layout.listviewcomponents, genitaliaList);
-        stylistListener = stylistsGetAll(babyStylists);
+        stylistListener = stylistsGetAll(stylistMap);
         stylist.addListenerForSingleValueEvent(stylistListener);
         handleLogin();
 
+    }
+
+    private ValueEventListener stylistsGetAll(final HashMap<String, Stylist> stylists)
+    {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    stylists.clear();
+                    Iterable<DataSnapshot> data = dataSnapshot.getChildren();
+                    Iterator<DataSnapshot> iterator = data.iterator();
+                    DataSnapshot stylistDataSnapshot;
+                    while (iterator.hasNext()) {
+                        stylistDataSnapshot = iterator.next();
+                        stylists.put(stylistDataSnapshot.getKey(), stylistDataSnapshot.getValue(Stylist.class));
+                    }
+                    initListView();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, databaseError.getMessage());
+                Log.d(TAG, databaseError.getDetails());
+            }
+        };
     }
 
     protected void handleLogin() {
