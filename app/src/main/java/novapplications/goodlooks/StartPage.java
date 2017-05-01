@@ -10,8 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+
 import novapplications.goodlooks.models.User;
 
 import com.firebase.ui.auth.AuthUI;
@@ -25,7 +24,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /*This class is the controller for the very first activity of the App.
@@ -39,10 +41,7 @@ public class StartPage extends AppCompatActivity
     private static final String TAG ="StartPage" ;
     protected FirebaseAuth login;
     protected FirebaseAuth.AuthStateListener loginListner;
-    private DatabaseReference DB;
-    private DatabaseReference users;
-    private DatabaseReference owners;
-    private DatabaseReference stylists;
+
     private FirebaseUser user;
     private User newUser;
     private EditText firstName, lastName;
@@ -50,6 +49,9 @@ public class StartPage extends AppCompatActivity
     private Button submitButton;
     private ValueEventListener rolesListener;
     private DatabaseReference currentUserRef;
+    private SharedPreferences userPref;
+    private SharedPreferences.Editor editor;
+    private DBhandler db;
 
 
     @Override
@@ -57,10 +59,9 @@ public class StartPage extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         //get datbase refrence
-        DB = FirebaseDatabase.getInstance().getReference();
-        users = DB.child("users");
-        owners = DB.child("owners");
-        stylists = DB.child("stylists");
+        db = new DBhandler();
+        userPref = getApplicationContext().getSharedPreferences("user",MODE_PRIVATE);
+        editor = userPref.edit();
         login = FirebaseAuth.getInstance();
         handleLogin();
     }
@@ -175,6 +176,7 @@ public class StartPage extends AppCompatActivity
                 {
                     Intent customerActivity = new Intent(getApplicationContext(), CustomerHome.class);
                     //TODO: get customer object from database, then put in in intent
+                    SetUserPrefFromDatabase(dataSnapshot);
                     startActivity(customerActivity);
                 } else//if user not in database add user and get information
                 {
@@ -189,8 +191,14 @@ public class StartPage extends AppCompatActivity
                 Log.w(TAG, "checkRoles:onCancelled", databaseError.toException());
             }
         };
-        currentUserRef = users.child(uid);
+        currentUserRef = DBhandler.users.child(uid);
         currentUserRef.addListenerForSingleValueEvent(rolesListener);
+
+    }
+
+    private void SetUserPrefFromDatabase(DataSnapshot dataSnapshot) {
+        User value = dataSnapshot.getValue(User.class);
+        saveUserPreference(user.getUid(),value);
 
     }
 
@@ -210,7 +218,7 @@ public class StartPage extends AppCompatActivity
             public void onClick(View v)
             {
 
-                newUser  = new User(firstName.getText().toString(),lastName.getText().toString(),user.getUid());
+                newUser  = new User(firstName.getText().toString(),lastName.getText().toString());
                 newUser.addToRoles(User.ROLE_CUSTOMER);//everyone will have the role of customer
                 //add other roles if checked
                 if(ownerCB.isChecked())
@@ -233,38 +241,58 @@ public class StartPage extends AppCompatActivity
 
     private void storeUser(String uid, User user)
     {
-        DatabaseReference uidRef = users.child(uid);
-        uidRef.child("firstName").setValue(user.getFirstName());
-        uidRef.child("lastName").setValue(user.getLastName());
+        Map<String, Object> update = new HashMap<String, Object>();
+        DatabaseReference uidRef = DBhandler.users.child(uid);
+        update.put(db.pathCreator(uidRef),newUser);
+        /*uidRef.setValue(newUser);*/
+       /* uidRef.child("firstName").setValue(user.getFirstName());
+        uidRef.child("lastName").setValue(user.getLastName());*/
+
         //store roles
         DatabaseReference rolesRef = uidRef.child("roles");
-        for (int i = 0; i < user.getNumberOfRoles(); i++)
+        for (int i = 0; i < user.getRoles().size(); i++)
         {
-            String currentRole = user.getRoles()[i];
+            String currentRole = user.getRoles().get(i);
             rolesRef.child(currentRole).setValue(true);
             if(i>=1) //no need to add customer ; customer is always first; every user is a customer by default
             {
                 String rolePlural = currentRole + "s";
-                DatabaseReference currentRoleRef = DB.child(rolePlural).child(user.getUid());
-                currentRoleRef.child("firstName").setValue(user.getFirstName());
-                currentRoleRef.child("lastName").setValue(user.getLastName());
+                DatabaseReference currentRoleRef = DBhandler.DB.child(rolePlural).child(uid);
+                update.put(db.pathCreator(currentRoleRef.child("firstName")),user.getFirstName());
+                update.put(db.pathCreator(currentRoleRef.child("lastName")),user.getLastName());
+              /*  currentRoleRef.child("firstName").setValue(user.getFirstName());
+                currentRoleRef.child("lastName").setValue(user.getLastName());*/
             }
 
+
         }
+        saveUserPreference(uid,user);
+        DBhandler.DB.updateChildren(update);
+    }
+
+
+
+    private void saveUserPreference(String uid, User user)
+    {
+        editor.putString("uid",uid);
+        editor.putString("firstName",user.getFirstName());
+        editor.putString("lastName",user.getLastName());
+        editor.putStringSet("roles", makeSet(user.getRoles()));
+        editor.commit();
     }
 
     private void goToHome()
     {
-        String[] rolesList = newUser.getRoles();
-        if(rolesList.length == 1)
+        ArrayList<String> rolesList = newUser.getRoles();
+        if(rolesList.size() == 1)
         {
             //launch customer home
             Intent customerActivity = new Intent(this,CustomerHome.class);
             Bundle bundle = new Bundle();
             bundle.putString("firstName",newUser.getFirstName());
             bundle.putString("lastName",newUser.getLastName());
-            bundle.putString("uid",newUser.getUid());
-            bundle.putStringArray("roles",rolesList);
+            bundle.putString("uid",user.getUid());
+            bundle.putStringArray("roles",rolesList.toArray(new String[newUser.getMAX_NUMBER_OF_ROLES()]));
             customerActivity.putExtras(bundle);
             /*customerActivity.putExtra("firstName",newUser.getFirstName());
             customerActivity.putExtra("lastName",newUser.getLastName());
@@ -281,14 +309,13 @@ public class StartPage extends AppCompatActivity
 
     }
 
-    private void chooseDestination(String[] rolesList)
+    private void chooseDestination(ArrayList<String> rolesList)
     {
         //the first role is always customer
-        if(rolesList[1].equals(User.ROLE_OWNER))//if the second listing is a owner role
+        if(rolesList.get(1).equals(User.ROLE_OWNER))//if the second listing is a owner role
         {
             //go to owner home
-            Intent ownerActivity = new Intent(getApplicationContext(),OwnerHome.class);
-            ownerActivity.putExtra("user",newUser);
+            Intent ownerActivity = new Intent(getApplicationContext(),OwnerHome.class);;
             startActivity(ownerActivity);
         }
         else
@@ -298,8 +325,8 @@ public class StartPage extends AppCompatActivity
             Bundle bundle = new Bundle();
             bundle.putString("firstName",newUser.getFirstName());
             bundle.putString("lastName",newUser.getLastName());
-            bundle.putString("uid",newUser.getUid());
-            bundle.putStringArray("roles",rolesList);
+            bundle.putString("uid",user.getUid());
+            bundle.putStringArray("roles",rolesList.toArray(new String[rolesList.size()]));
            /* stylistActivity.putExtra("firstName",newUser.getFirstName());
             stylistActivity.putExtra("lastName",newUser.getLastName());
             stylistActivity.putExtra("uid",newUser.getUid());
@@ -312,10 +339,10 @@ public class StartPage extends AppCompatActivity
         }
     }
 
-    private Set<String> makeSet(String[] rolesList) {
+    private Set<String> makeSet(ArrayList<String> rolesList) {
         Set<String> result = new HashSet<String>();
-        for (int i = 0; i <rolesList.length ; i++) {
-            result.add(rolesList[i]);
+        for (int i = 0; i <rolesList.size() ; i++) {
+            result.add(rolesList.get(i));
         }
         return result;
     }

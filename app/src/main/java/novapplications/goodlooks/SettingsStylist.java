@@ -11,20 +11,28 @@ import android.view.View;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
+
+import novapplications.goodlooks.models.Address;
+import novapplications.goodlooks.models.Service;
+import novapplications.goodlooks.models.User;
 
 //page for stylist to configure details such as hours to work and services they provide.
 public class SettingsStylist extends AppCompatActivity {
     public static final int REQUEST_CODE_LOGIN = 1;
     protected FirebaseAuth login;
     protected FirebaseAuth.AuthStateListener loginListner;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_stylist);
         handleLogin();
+        currentUser = (User) getIntent().getSerializableExtra("user");
     }
 
     protected void handleLogin() {
@@ -79,5 +87,18 @@ public class SettingsStylist extends AppCompatActivity {
         if(loginListner != null) {
             login.removeAuthStateListener(loginListner);
         }
+    }
+    //adds a service to the user list and to the list of providers of service
+    private void addService(Service service)
+    {
+        DatabaseReference DB = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference serviceCategories = DB.child("serviceCategories");
+        DatabaseReference ableStylist= serviceCategories.child(service.getCategory()).child("ableStylist").child(login.getCurrentUser().getUid());
+        ableStylist.child("firstName").setValue(currentUser.getFirstName());
+        ableStylist.child("lastName").setValue(currentUser.getLastName());
+    }
+    private void addAddressOfAppointments(Address address)
+    {
+        //use geoLocation to get lat and long
     }
 }

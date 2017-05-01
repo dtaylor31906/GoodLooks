@@ -190,6 +190,7 @@ public class StylistHome extends AppCompatActivity
                 return true;
             case R.id.settings:
                 Intent settingsActivity = new Intent(getApplicationContext(),SettingsStylist.class);
+                settingsActivity.putExtras(getIntent().getExtras());
                 startActivity(settingsActivity);
                 return  true;
             default:
