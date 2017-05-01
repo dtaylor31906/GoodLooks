@@ -80,9 +80,11 @@ public class DBhandler
         key = appointments.push().getKey();
         appointments.child(key).setValue(appointment);
 
-
-
-
     }
+    public void getUserAppointments(String uid)
+    {
+        DatabaseReference userAppointments = users.child(uid).child("appointments");
+    }
+
 
 }

@@ -5,9 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-/**
- * Created by Nova on 4/10/2017.
- */
 
 public class Appointment
 {

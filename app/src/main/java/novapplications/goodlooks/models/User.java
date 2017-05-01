@@ -11,7 +11,7 @@ public class User {
     private String firstName;
     private String lastName;
     private ArrayList<String> roles;
-    private ArrayList<Appointment>appointments;
+    private ArrayList<customerAppointment>appointments;
     public static final String ROLE_CUSTOMER = "customer";
     public static final String ROLE_STYLIST = "stylist";
     public static final String ROLE_OWNER = "owner";
@@ -60,11 +60,11 @@ public class User {
         roles.add(role);
     }
 
-    public ArrayList<Appointment> getAppointments() {
+    public ArrayList<customerAppointment> getAppointments() {
         return appointments;
     }
 
-    public void setAppointments(ArrayList<Appointment> appointments) {
+    public void setAppointments(ArrayList<customerAppointment> appointments) {
         this.appointments = appointments;
     }
 
