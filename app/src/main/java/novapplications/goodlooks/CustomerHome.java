@@ -47,12 +47,15 @@ public class CustomerHome extends AppCompatActivity
     private ValueEventListener rolesListner;
     private View.OnClickListener appointmentButtonListener;
     private SharedPreferences userPref;
+    private ValueEventListener appointmentsListner;
+    private DatabaseReference appointmentsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
         userPref = getApplicationContext().getSharedPreferences("user",MODE_PRIVATE);
+        appointments = new ArrayList<customerAppointment>();
         initListners();
         customizeActionBar();
         handleLogin();
@@ -65,27 +68,26 @@ public class CustomerHome extends AppCompatActivity
     {
         String uid = userPref.getString("uid",null);
         DatabaseReference currentUserRef = DBhandler.users.child(uid);
-        currentUserRef.child("appointments").addValueEventListener(new ValueEventListener() {
+        appointmentsListner = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if(dataSnapshot.exists())
-                {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
                     Iterable<DataSnapshot> data = dataSnapshot.getChildren();
                     Iterator<DataSnapshot> iterator = data.iterator();
-                    while (iterator.hasNext())
-                    {
-                        appointments.add(iterator.next().getValue(novapplications.goodlooks.models.customerAppointment.class));
+                    while (iterator.hasNext()) {
+                        appointments.add(iterator.next().getValue(customerAppointment.class));
                     }
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG,databaseError.getMessage());
-                Log.d(TAG,databaseError.getDetails());
+                Log.d(TAG, databaseError.getMessage());
+                Log.d(TAG, databaseError.getDetails());
             }
-        });
+        };
+        appointmentsRef = currentUserRef.child("appointments");
+        appointmentsRef.addValueEventListener(appointmentsListner);
     }
 
     private void initListners()
@@ -256,6 +258,10 @@ public class CustomerHome extends AppCompatActivity
         if(rolesListner != null)
         {
             currentUserRoles.removeEventListener(rolesListner);
+        }
+        if (appointmentsListner != null)
+        {
+            appointmentsRef.removeEventListener(appointmentsListner);
         }
     }
 

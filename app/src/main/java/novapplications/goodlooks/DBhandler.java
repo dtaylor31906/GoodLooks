@@ -8,6 +8,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import novapplications.goodlooks.models.Appointment;
 import novapplications.goodlooks.models.Service;
 import novapplications.goodlooks.models.Stylist;
@@ -81,9 +84,29 @@ public class DBhandler
         appointments.child(key).setValue(appointment);
 
     }
-    public void getUserAppointments(String uid)
+
+    public ValueEventListener stylistsGetAll(final ArrayList<Stylist> stylists)
     {
-        DatabaseReference userAppointments = users.child(uid).child("appointments");
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.exists())
+                {
+                    Iterable<DataSnapshot> data = dataSnapshot.getChildren();
+                    Iterator<DataSnapshot> iterator = data.iterator();
+                    while (iterator.hasNext())
+                    {
+                        stylists.add(iterator.next().getValue(Stylist.class));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
     }
 
 

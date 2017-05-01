@@ -10,7 +10,6 @@ public class customerAppointment
 {
     private String stylistFirstName, stylistLastName, stlylistUid;
     private long startTime, endTime;
-    private ArrayList<Service> servicesToBePerformed;//services to be performed.
 
     public customerAppointment()
     {
@@ -57,11 +56,4 @@ public class customerAppointment
         this.endTime = endTime;
     }
 
-    public ArrayList<Service> getServicesToBePerformed() {
-        return servicesToBePerformed;
-    }
-
-    public void setServicesToBePerformed(ArrayList<Service> servicesToBePerformed) {
-        this.servicesToBePerformed = servicesToBePerformed;
-    }
 }
