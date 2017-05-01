@@ -1,7 +1,7 @@
 package novapplications.goodlooks.models;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -11,52 +11,62 @@ import java.util.Date;
 
 public class Appointment
 {
-    private User provider,customer;
-    private Date startTime, estimatedEndTime, actualEndTime;
+    private String customerFirstName,customerLastName, stylistFirstName, stylistLastName;
+    private long startTime, endTime;
     private ArrayList<Service> servicesToBePerformed;//services to be performed.
 
 
-    public Appointment() {
+    public Appointment()
+    {
+
     }
 
-    public User getProvider() {
-        return provider;
+    public String getCustomerFirstName() {
+        return customerFirstName;
     }
 
-    public void setProvider(User provider) {
-        this.provider = provider;
+    public void setCustomerFirstName(String customerFirstName) {
+        this.customerFirstName = customerFirstName;
     }
 
-    public User getCustomer() {
-        return customer;
+    public String getCustomerLastName() {
+        return customerLastName;
     }
 
-    public void setCustomer(User customer) {
-        this.customer = customer;
+    public void setCustomerLastName(String customerLastName) {
+        this.customerLastName = customerLastName;
     }
 
-    public Date getStartTime() {
+    public String getStylistFirstName() {
+        return stylistFirstName;
+    }
+
+    public void setStylistFirstName(String stylistFirstName) {
+        this.stylistFirstName = stylistFirstName;
+    }
+
+    public String getStylistLastName() {
+        return stylistLastName;
+    }
+
+    public void setStylistLastName(String stylistLastName) {
+        this.stylistLastName = stylistLastName;
+    }
+
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEstimatedEndTime() {
-        return estimatedEndTime;
+    public long getEndTime() {
+        return endTime;
     }
 
-    public void setEstimatedEndTime(Date estimatedEndTime) {
-        this.estimatedEndTime = estimatedEndTime;
-    }
-
-    public Date getActualEndTime() {
-        return actualEndTime;
-    }
-
-    public void setActualEndTime(Date actualEndTime) {
-        this.actualEndTime = actualEndTime;
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 
     public ArrayList<Service> getServicesToBePerformed() {
@@ -65,5 +75,14 @@ public class Appointment
 
     public void setServicesToBePerformed(ArrayList<Service> servicesToBePerformed) {
         this.servicesToBePerformed = servicesToBePerformed;
+    }
+
+    public Date getStartDateTime()
+    {
+        return new Date(startTime);
+    }
+    public Date getEndDateTime()
+    {
+        return new Date(endTime);
     }
 }

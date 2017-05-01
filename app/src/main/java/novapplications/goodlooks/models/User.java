@@ -11,6 +11,7 @@ public class User {
     private String firstName;
     private String lastName;
     private ArrayList<String> roles;
+    private ArrayList<Appointment>appointments;
     public static final String ROLE_CUSTOMER = "customer";
     public static final String ROLE_STYLIST = "stylist";
     public static final String ROLE_OWNER = "owner";
@@ -57,6 +58,14 @@ public class User {
     public void addToRoles(String role)
     {
         roles.add(role);
+    }
+
+    public ArrayList<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(ArrayList<Appointment> appointments) {
+        this.appointments = appointments;
     }
 
     public int getMAX_NUMBER_OF_ROLES() {

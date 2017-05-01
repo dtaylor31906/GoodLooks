@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import novapplications.goodlooks.models.Appointment;
 import novapplications.goodlooks.models.Service;
 import novapplications.goodlooks.models.Stylist;
 
@@ -15,7 +16,7 @@ public class DBhandler
 {
     public static DatabaseReference DB;
     public static DatabaseReference users;
-    public  static DatabaseReference owners;
+    public static DatabaseReference owners;
     public static DatabaseReference stylists;
     public static  DatabaseReference serviceCategories;
     private final String TAG = "DBHandler";
@@ -65,6 +66,19 @@ public class DBhandler
                 Log.d(TAG,databaseError.getMessage());
             }
         });
+    }
+    public void addAppointment(Appointment appointment)
+    {
+        //add Appointment to customer
+        DatabaseReference appointmentsRef = users.child("appointments");
+        String key = appointmentsRef.push().getKey();
+        appointmentsRef.child(key).setValue(appointment);
+
+        //add Appointment to appointmentLog;
+
+
+
+
     }
 
 }
