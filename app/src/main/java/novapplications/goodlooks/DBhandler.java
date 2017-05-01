@@ -110,6 +110,9 @@ public class DBhandler
             }
         };
     }
+
+
+
     public void stylistsAddNewCustomerRequest()
     {
 
