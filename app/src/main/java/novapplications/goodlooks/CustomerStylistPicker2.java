@@ -143,8 +143,11 @@ public class CustomerStylistPicker2 extends AppCompatActivity {
 
 
     private void initListView() {
-        mStylist = babyStylists.get(0);
-        babyStylistadapter.add(mStylist.getFirstName());
+
+        for(Map.Entry<String, Stylist> entry : stylistMap.entrySet())
+        {
+            babyStylistadapter.add(entry.getValue().getFirstName()+ " "+ entry.getValue().getLastName());
+        }
         StylistListView.setAdapter(babyStylistadapter);
 
     }

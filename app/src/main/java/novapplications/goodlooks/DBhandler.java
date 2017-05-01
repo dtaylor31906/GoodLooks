@@ -72,18 +72,16 @@ public class DBhandler
         });
     }
 
-    public void stylistsAddNewCustomerRequest(Appointment appointment)
-    {
+    public void stylistsAddNewCustomerRequest(Appointment appointment) {
         //add appointment to log
         String appointmentID = appointments.push().getKey();
         //add stylist appointment as request
         String uid = appointment.getStlylistUid();
-        if(uid != null)
-        {
+        if (uid != null) {
             DatabaseReference appointments = stylists.child(uid).child("appointments");
             String key = appointments.push().getKey();
 
-            appointments.child(key).setValue(new StylistAppointment(appointment,appointmentID));
+            appointments.child(key).setValue(new StylistAppointment(appointment, appointmentID));
         }
         //add customer appointment
         DatabaseReference customerAppointments = users.child(appointment.getCustomerUid()).child("appointments");

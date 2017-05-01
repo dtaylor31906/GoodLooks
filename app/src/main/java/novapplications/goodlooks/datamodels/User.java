@@ -64,7 +64,4 @@ public class User {
         this.appointments = appointments;
     }
 
-    public int getMAX_NUMBER_OF_ROLES() {
-        return MAX_NUMBER_OF_ROLES;
-    }
 }
