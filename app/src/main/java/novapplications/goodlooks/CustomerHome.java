@@ -49,10 +49,11 @@ public class CustomerHome extends AppCompatActivity
     private SharedPreferences userPref;
     private ValueEventListener appointmentsListner;
     private DatabaseReference appointmentsRef;
- public customerAppointment mCustomerAppointment;
+    public customerAppointment mCustomerAppointment;
     private ArrayAdapter<String> listAdapter ;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
         userPref = getApplicationContext().getSharedPreferences("user",MODE_PRIVATE);
@@ -81,9 +82,6 @@ public class CustomerHome extends AppCompatActivity
         // Otherwise an exception will occur.
 
 
-        listAdapter.add( mCustomerAppointment.getStylistFirstName().toString() );
-        // Set the ArrayAdapter as the ListView's adapter.
-        appointmentsListView.setAdapter( listAdapter );
     }
 
     private void getAppointments()
@@ -94,12 +92,16 @@ public class CustomerHome extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    appointments.clear();
                     Iterable<DataSnapshot> data = dataSnapshot.getChildren();
                     Iterator<DataSnapshot> iterator = data.iterator();
-                    while (iterator.hasNext()) {
+                    while (iterator.hasNext())
+                    {
                         appointments.add(iterator.next().getValue(customerAppointment.class));
                     }
+                    initListView();
                 }
+
             }
 
             @Override
@@ -109,7 +111,16 @@ public class CustomerHome extends AppCompatActivity
             }
         };
         appointmentsRef = currentUserRef.child("appointments");
-        appointmentsRef.addValueEventListener(appointmentsListner);
+        //appointmentsRef.addValueEventListener(appointmentsListner);
+        appointmentsRef.addListenerForSingleValueEvent(appointmentsListner);
+    }
+
+    private void initListView()
+    {
+        mCustomerAppointment = appointments.get(0);
+        listAdapter.add( mCustomerAppointment.getStylistFirstName());
+        // Set the ArrayAdapter as the ListView's adapter.
+        appointmentsListView.setAdapter( listAdapter );
     }
 
     private void initListners()

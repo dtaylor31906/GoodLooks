@@ -93,6 +93,7 @@ public class DBhandler
             {
                 if(dataSnapshot.exists())
                 {
+                    stylists.clear();
                     Iterable<DataSnapshot> data = dataSnapshot.getChildren();
                     Iterator<DataSnapshot> iterator = data.iterator();
                     while (iterator.hasNext())
@@ -104,9 +105,14 @@ public class DBhandler
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
+                Log.d(TAG, databaseError.getDetails());
             }
         };
+    }
+    public void stylistsAddNewCustomerRequest()
+    {
+
     }
 
 
