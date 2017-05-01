@@ -26,8 +26,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 
 import novapplications.goodlooks.models.customerAppointment;
@@ -117,8 +119,12 @@ public class CustomerHome extends AppCompatActivity
 
     private void initListView()
     {
+
+
+
         mCustomerAppointment = appointments.get(0);
-        listAdapter.add( mCustomerAppointment.getStylistFirstName());
+        String dateString = new SimpleDateFormat("EEE, d MMM yyyy HH:mm aaa").format(new Date(mCustomerAppointment.getStartTime()));
+        listAdapter.add( mCustomerAppointment.getStylistFirstName()+ " "+ mCustomerAppointment.getStylistLastName()+ " on "+ dateString);
         // Set the ArrayAdapter as the ListView's adapter.
         appointmentsListView.setAdapter( listAdapter );
     }
