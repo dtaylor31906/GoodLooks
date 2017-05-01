@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import novapplications.goodlooks.datamodels.Appointment;
 import novapplications.goodlooks.datamodels.Stylist;
 
 public class CustomerStylistPicker2 extends AppCompatActivity {
@@ -36,11 +39,12 @@ public class CustomerStylistPicker2 extends AppCompatActivity {
     protected FirebaseAuth.AuthStateListener loginListner;
 
     private ArrayList<Stylist> babyStylists = new ArrayList<>();
+    private ArrayList<Stylist> stylistAdaptorHelper;
     private HashMap<String,Stylist> stylistMap = new HashMap<>();
     private ArrayAdapter<String> babyStylistadapter;
     private ListView StylistListView;
     private SharedPreferences userPref;
-
+    private Appointment appointment;
 
 
     @Override
@@ -50,15 +54,26 @@ public class CustomerStylistPicker2 extends AppCompatActivity {
         userPref = getApplicationContext().getSharedPreferences("user", MODE_PRIVATE);
         stylistsGetAll(babyStylists);
         StylistListView = (ListView) findViewById(R.id.stylist_listview);
-
-        String[] genitalia = new String[]{"Vagina", "Pussy", "Coochie", "Cat", "Cunt", "Twat", "Punanny", "Yum-Yum"};
-        ArrayList<String> genitaliaList = new ArrayList<String>();
-        genitaliaList.addAll(Arrays.asList(genitalia));
-        babyStylistadapter = new ArrayAdapter<String>(this, R.layout.listviewcomponents, genitaliaList);
+        userPref = getApplicationContext().getSharedPreferences("user",MODE_PRIVATE);
+        String[] temp = new String[]{};
+        ArrayList<String> tempList = new ArrayList<String>();
+        tempList.addAll(Arrays.asList(temp));
+        babyStylistadapter = new ArrayAdapter<String>(this, R.layout.listviewcomponents, tempList);
         stylistListener = stylistsGetAll(stylistMap);
         stylist.addListenerForSingleValueEvent(stylistListener);
         handleLogin();
-
+        StylistListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                appointment = new Appointment();
+                appointment.setCustomerFirstName(userPref.getString("firstName",""));
+                appointment.setCustomerLastName(userPref.getString("lastNme",""));
+                appointment.setCustomerUid(userPref.getString("uid",""));
+                appointment.setStylistFirstName(view.toString().split("/s")[0]);
+                appointment.setStylistFirstName(view.toString().split("/s")[1]);
+            }
+        });
     }
 
     private ValueEventListener stylistsGetAll(final HashMap<String, Stylist> stylists)
@@ -143,10 +158,13 @@ public class CustomerStylistPicker2 extends AppCompatActivity {
 
 
     private void initListView() {
-
+        stylistAdaptorHelper = new ArrayList<Stylist>();
+        babyStylistadapter.clear();
         for(Map.Entry<String, Stylist> entry : stylistMap.entrySet())
         {
             babyStylistadapter.add(entry.getValue().getFirstName()+ " "+ entry.getValue().getLastName());
+            stylistAdaptorHelper.add(entry.getValue());
+
         }
         StylistListView.setAdapter(babyStylistadapter);
 

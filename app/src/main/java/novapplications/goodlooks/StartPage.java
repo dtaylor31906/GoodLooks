@@ -286,16 +286,6 @@ public class StartPage extends AppCompatActivity
         {
             //launch customer home
             Intent customerActivity = new Intent(this,CustomerHome.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("firstName",newUser.getFirstName());
-            bundle.putString("lastName",newUser.getLastName());
-            bundle.putString("uid",user.getUid());
-            bundle.putStringArray("roles",rolesList.toArray(new String[newUser.getMAX_NUMBER_OF_ROLES()]));
-            customerActivity.putExtras(bundle);
-            /*customerActivity.putExtra("firstName",newUser.getFirstName());
-            customerActivity.putExtra("lastName",newUser.getLastName());
-            customerActivity.putExtra("uid",newUser.getUid());
-            customerActivity.putExtra("roles",rolesList);*/
             startActivity(customerActivity);
         }
         else //if other roles exist

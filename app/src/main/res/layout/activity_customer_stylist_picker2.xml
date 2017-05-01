@@ -8,10 +8,10 @@
     tools:context="novapplications.goodlooks.CustomerStylistPicker2">
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/requestButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="Make Request"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
@@ -20,17 +20,20 @@
         app:layout_constraintVertical_bias="0.502"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <ListView
         android:id="@+id/stylist_listview"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="278dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="7dp"
-        android:layout_marginTop="-2dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="7dp" />
 </android.support.constraint.ConstraintLayout>

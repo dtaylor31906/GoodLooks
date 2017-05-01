@@ -339,6 +339,7 @@ deleteBtn.setOnClickListener(new View.OnClickListener()
     {
         super.onResume();
         login.addAuthStateListener(loginListner);
+        //appointmentsRef.addListenerForSingleValueEvent(appointmentsListner);
     }
 
     @Override

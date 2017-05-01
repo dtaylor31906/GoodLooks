@@ -52,24 +52,6 @@ public Appointment mAppointment;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stylist_home);
         Bundle extras = getIntent().getExtras();
-        // Find the ListView resource.
-        appointments = (ListView) findViewById( R.id.appointmentListView);
-
-        // Create and populate a List of planet names.
-        String[] planets = new String[] { "Mercury", "Venus", "Earth", "Mars",
-                "Jupiter", "Saturn", "Uranus", "Neptune"};
-        ArrayList<String> apptList = new ArrayList<String>();
-        apptList.addAll( Arrays.asList(planets) );
-
-        // Create ArrayAdapter using the planet list.
-        listAdapter = new ArrayAdapter<String>(this, R.layout.appointment, apptList);
-
-        // Add more planets. If you passed a String[] instead of a List<String>
-        // into the ArrayAdapter constructor, you must not add more items.
-        // Otherwise an exception will occur.
-
-
-        // Set the ArrayAdapter as the ListView's adapter.
         appointments.setAdapter( listAdapter );
         if (extras == null)
         {
