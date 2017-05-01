@@ -3,7 +3,7 @@ package novapplications.goodlooks.datamodels;
 
 public class StylistAppointment
 {
-    private String customerFirstName,customerLastName, customerUid;
+    private String customerFirstName,customerLastName, customerUid, appointmentID;
     private long startTime, endTime;
 
     public StylistAppointment() {
@@ -17,6 +17,19 @@ public class StylistAppointment
         endTime = appointment.getEndTime();
     }
 
+    public StylistAppointment(Appointment appointment, String appointmentID)
+    {
+        this(appointment);
+        this.appointmentID = appointmentID;
+    }
+
+    public String getAppointmentID() {
+        return appointmentID;
+    }
+
+    public void setAppointmentID(String appointmentID) {
+        this.appointmentID = appointmentID;
+    }
 
     public String getCustomerFirstName() {
         return customerFirstName;
