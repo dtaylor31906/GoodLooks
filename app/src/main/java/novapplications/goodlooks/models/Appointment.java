@@ -1,6 +1,7 @@
 package novapplications.goodlooks.models;
 
 import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -12,7 +13,7 @@ public class Appointment
 {
     private User provider,customer;
     private Date startTime, estimatedEndTime, actualEndTime;
-    private AbstractList<Service> servicesToBePerformed;//services to be performed.
+    private ArrayList<Service> servicesToBePerformed;//services to be performed.
 
 
     public Appointment() {
@@ -58,11 +59,11 @@ public class Appointment
         this.actualEndTime = actualEndTime;
     }
 
-    public AbstractList<Service> getServicesToBePerformed() {
+    public ArrayList<Service> getServicesToBePerformed() {
         return servicesToBePerformed;
     }
 
-    public void setServicesToBePerformed(AbstractList<Service> servicesToBePerformed) {
+    public void setServicesToBePerformed(ArrayList<Service> servicesToBePerformed) {
         this.servicesToBePerformed = servicesToBePerformed;
     }
 }
