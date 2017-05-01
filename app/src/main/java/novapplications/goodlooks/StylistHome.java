@@ -53,7 +53,7 @@ public Appointment mAppointment;
         setContentView(R.layout.activity_stylist_home);
         Bundle extras = getIntent().getExtras();
         // Find the ListView resource.
-        /*appointments = (ListView) findViewById( R.id.appointmentListView);
+        appointments = (ListView) findViewById( R.id.appointmentListView);
 
         // Create and populate a List of planet names.
         String[] planets = new String[] { "Mercury", "Venus", "Earth", "Mars",
@@ -70,7 +70,7 @@ public Appointment mAppointment;
 
 
         // Set the ArrayAdapter as the ListView's adapter.
-        appointments.setAdapter( listAdapter );*/
+        appointments.setAdapter( listAdapter );
         if (extras == null)
         {
             getRolesFromDataBase();

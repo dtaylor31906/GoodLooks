@@ -167,7 +167,7 @@ public class CustomerHome extends AppCompatActivity
             public void onClick(View v)
             {
                 //inquire about services
-                Intent categorySelection = new Intent(getApplicationContext(), CustomerStylistPicker2.class);
+                Intent categorySelection = new Intent(getApplicationContext(), CustomerCategoryPicker.class);
                 startActivity(categorySelection);
                 //then take customer to a page of stylist in there area that offer that service.
             }
